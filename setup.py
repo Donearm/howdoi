@@ -35,8 +35,8 @@ setup(name='howdoi',
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.3",
         "Topic :: Documentation",
         ],
       keywords='howdoi help console',
@@ -53,7 +53,6 @@ setup(name='howdoi',
             ]
         },
       install_requires=[
-        'pyquery',
         'argparse',
         ],
       )
