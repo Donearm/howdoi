@@ -8,39 +8,45 @@
 #
 ##################################################
 
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
 import sys
 import json
 import argparse
 import re
+import lxml.html
 
-from pyquery import PyQuery as pq
+#from pyquery import PyQuery as pq
 
 GOOGLE_SEARCH_URL = "https://www.google.com/search?q=site:stackoverflow.com%20{0}"
 DUCK_SEARCH_URL = "http://duckduckgo.com/html?q=site%3Astackoverflow.com%20{0}"
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17"
 
 def get_result(url):
-    opener = urllib2.build_opener()
+    opener = urllib.request.build_opener()
     opener.addheaders = [('User-agent', USER_AGENT)]
     result = opener.open(url)
     return result.read()
 
 def is_question(link):
-    return re.search('questions/\d+/', link)
+    return re.search("^http\:\/\/stackoverflow\.com\/questions/\d+/", link)
 
 def get_google_links(query):
-    url = GOOGLE_SEARCH_URL.format(urllib.quote(query))
+    links = []
+    url = GOOGLE_SEARCH_URL.format(urllib.parse.quote(query))
     result = get_result(url)
-    html = pq(result)
-    return [a.attrib['href'] for a in html('.l')]
+    html = lxml.html.document_fromstring(result)
+    for l in html.iterlinks():
+        if is_question(l[2]):
+            links.append(l[2])
+            
+    return links
 
 def get_duck_links(query):
-    url = DUCK_SEARCH_URL.format(urllib.quote(query))
+    url = DUCK_SEARCH_URL.format(urllib.parse.quote(query))
     result = get_result(url)
-    html = pq(result)
-    links = [l.find('a').attrib['href'] for l in html('.links_main')]
+    html = lxml.html.document_fromstring(result)
+    links = html.xpath("//a[@href]")
+    return [l.get('href', None) for l in links]
 
 def get_link_at_pos(links, pos):
     pos = int(pos) - 1
@@ -54,6 +60,7 @@ def get_link_at_pos(links, pos):
     return link
 
 def get_instructions(args):
+    text = []
     links = get_google_links(args['query'])
     if not links:
         return ''
@@ -64,21 +71,25 @@ def get_instructions(args):
 
     link = link + '?answertab=votes'
     page = get_result(link)
-    html = pq(page)
-    first_answer = html('.answer').eq(0)
-    instructions = first_answer.find('pre') or first_answer.find('code')
-    if args['all'] or not instructions:
-        text = first_answer.find('.post-text').eq(0).text()
+    html = lxml.html.document_fromstring(page)
+    first_answer = html.xpath("//td[@class='answercell']")
+    tags = first_answer[0].xpath("code") or first_answer[0].xpath("//pre")
+    if tags:
+        for t in tags[0]:
+            text.append(t.text_content())
     else:
-        text = instructions.eq(0).text()
-    if not text:
-        return ''
-    return text
+        post_text = first_answer[0].xpath("div[@class='post-text']/p")
+        if post_text:
+            for t in post_text:
+                text.append(t.text_content())
+            return text
+
+    return "\n".join(text)
 
 def howdoi(args):
     args['query'] = ' '.join(args['query']).replace('?', '')
     instructions = get_instructions(args) or 'Sorry, couldn\'t find any help with that topic'
-    print instructions
+    print(instructions)
 
 def command_line_runner():
     parser = argparse.ArgumentParser(description='code search tool')
