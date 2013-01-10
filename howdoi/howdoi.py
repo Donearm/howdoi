@@ -82,7 +82,6 @@ def get_instructions(args):
         if post_text:
             for t in post_text:
                 text.append(t.text_content())
-            return text
 
     return "\n".join(text)
 
