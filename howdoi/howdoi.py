@@ -13,6 +13,7 @@ import sys
 import argparse
 import re
 import lxml.html
+import os.path
 
 __version__ = "0.3"
 
@@ -20,6 +21,7 @@ __version__ = "0.3"
 GOOGLE_SEARCH_URL = "https://www.google.com/search?q=site:stackoverflow.com%20{0}"
 DUCK_SEARCH_URL = "http://duckduckgo.com/html?q=site%3Astackoverflow.com%20{0}"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:18.0) Gecko/20100101 Firefox/18.0"
+CONFIG_FILE = os.path.join(os.path.expanduser('~'), '.howdoi')
 
 
 
@@ -100,12 +102,35 @@ def get_instructions(args):
     return "\n".join(text)
 
 
+def save_query(qry):
+    with open(CONFIG_FILE, "w") as c:
+        try:
+            c.write(qry)
+        except OSError:
+            # something went wrong while accessing the config file
+            pass
+
+
+def read_last_query():
+    with open(CONFIG_FILE, "r") as c:
+        try:
+            first_line = c.readline()
+            return first_line
+        except OSError:
+            pass
+
 def howdoi(args):
-    if not len(args['query']):
+    if not len(args['query']) and not args['again']:
         print_help()
         sys.exit(1)
     else:
-        args['query'] = ' '.join(args['query']).replace('?', '')
+        # do we want the last query again?
+        if args['again']:
+            args['query'] = read_last_query()
+        else:
+            args['query'] = ' '.join(args['query']).replace('?', '')
+        # save the query for later reuse
+        save_query(args['query'])
         instructions = get_instructions(args) or 'Sorry, couldn\'t find any help with that topic'
         print(instructions)
 
@@ -116,6 +141,8 @@ def command_line_runner():
                         help='the question to answer')
     parser.add_argument('-p','--pos', help='select answer in specified position (default: 1)', default=1)
     parser.add_argument('-a','--all', help='display the full text of the answer',
+                        action='store_true')
+    parser.add_argument('-g','--again', help='display the last query again',
                         action='store_true')
     parser.add_argument('-l','--link', help='display only the answer link',
                         action='store_true')
