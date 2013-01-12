@@ -52,7 +52,4 @@ setup(name='howdoi',
             'howdoi = howdoi.howdoi:command_line_runner',
             ]
         },
-      install_requires=[
-        'argparse',
-        ],
       )

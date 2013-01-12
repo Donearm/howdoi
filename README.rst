@@ -112,6 +112,6 @@ If so, just do this:
 
 ::
 
-    sudo chmod -R go+w /Library/Python/2.7/site-packages/
+    sudo chmod -R go+w /Library/Python/3.3/site-packages/
 
 `From this discussion <https://github.com/gleitz/howdoi/issues/10>`_
