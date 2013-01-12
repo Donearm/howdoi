@@ -74,14 +74,14 @@ def get_link_at_pos(links, pos):
     return link
 
 
-def get_instructions(args):
+def get_instructions(args, position):
     text = []
     links = get_google_links(args['query'])
 #    links = get_duck_links(args['query'])
     if not links:
         return ''
 
-    link = get_link_at_pos(links, args['pos'])
+    link = get_link_at_pos(links, position)
     if args.get('link'):
         return link
 
@@ -119,6 +119,7 @@ def read_last_query():
         except OSError:
             pass
 
+
 def howdoi(args):
     if not len(args['query']) and not args['again']:
         print_help()
@@ -131,7 +132,7 @@ def howdoi(args):
             args['query'] = ' '.join(args['query']).replace('?', '')
         # save the query for later reuse
         save_query(args['query'])
-        instructions = get_instructions(args) or 'Sorry, couldn\'t find any help with that topic'
+        instructions = get_instructions(args, args['pos']) or 'Sorry, couldn\'t find any help with that topic'
         print(instructions)
 
 
