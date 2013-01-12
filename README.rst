@@ -45,6 +45,18 @@ howdoi will answer all sorts of queries
     $ howdoi create tar archive
     > tar -cf backup.tar --exclude "www/subf3" www
 
+    $ howdoi --again
+    > tar -cf backup.tar --exclude "www/subf3" www
+
+`--again` simply repeats the last query
+
+    $ howdoi --again -p 2
+    > tar cvf archive.tar archive/mydir/archive_dir
+
+with `-p` returns the second or third or fourth and so on result of the 
+same query
+
+
 Installation
 ------------
 
@@ -69,7 +81,7 @@ Usage
 
 ::
 
-    howdoi [-h] [-p POS] [-a] [-l] QUERY [QUERY ...]
+    howdoi [-h] [-p POS] [-a] [-g] [-l] QUERY [QUERY ...]
 
     code search tool
 
@@ -80,6 +92,7 @@ Usage
       -h, --help         show this help message and exit
       -p POS, --pos POS  select answer in specified position (default: 1)
       -a, --all          display the full text of the answer
+      -g, --again        display the last query again
       -l, --link         display only the answer link
 
 Author
