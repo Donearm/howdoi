@@ -70,6 +70,7 @@ def get_link_at_pos(links, pos):
 def get_instructions(args):
     text = []
     links = get_google_links(args['query'])
+#    links = get_duck_links(args['query'])
     if not links:
         return ''
 
@@ -110,7 +111,8 @@ def command_line_runner():
     parser.add_argument('-l','--link', help='display only the answer link',
                         action='store_true')
     args = vars(parser.parse_args())
-    howdoi(args)
+    return args
 
 if __name__ == '__main__':
-    command_line_runner()
+    cli_args = command_line_runner()
+    howdoi(cli_args)
