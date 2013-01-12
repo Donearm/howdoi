@@ -22,6 +22,13 @@ DUCK_SEARCH_URL = "http://duckduckgo.com/html?q=site%3Astackoverflow.com%20{0}"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:18.0) Gecko/20100101 Firefox/18.0"
 
 
+
+def print_help():
+    print("""Howdoi is a code search tool. It answers any kind of query but perfect precision is not guaranteed
+
+USAGE:
+    howdoy.py your query""")
+
 def get_result(url):
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-agent', USER_AGENT)]
@@ -94,9 +101,13 @@ def get_instructions(args):
 
 
 def howdoi(args):
-    args['query'] = ' '.join(args['query']).replace('?', '')
-    instructions = get_instructions(args) or 'Sorry, couldn\'t find any help with that topic'
-    print(instructions)
+    if not len(args['query']):
+        print_help()
+        sys.exit(1)
+    else:
+        args['query'] = ' '.join(args['query']).replace('?', '')
+        instructions = get_instructions(args) or 'Sorry, couldn\'t find any help with that topic'
+        print(instructions)
 
 
 def command_line_runner():
