@@ -15,6 +15,8 @@ import argparse
 import re
 import lxml.html
 
+__version__ = "0.3"
+
 #from pyquery import PyQuery as pq
 
 GOOGLE_SEARCH_URL = "https://www.google.com/search?q=site:stackoverflow.com%20{0}"

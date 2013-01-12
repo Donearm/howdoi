@@ -1,3 +1,9 @@
+0.3
+------
+
+-	Python3 ready
+-	Removed need for pyquery, only lxml now
+
 0.2
 ------
 
