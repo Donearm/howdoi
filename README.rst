@@ -105,8 +105,9 @@ Notes
 -----
 
 -  Requires Python <= 3.3 (didn't test but any 3.x python should do)
+-  A standalone Windows executable with the howdoi application `is available here <https://dl.dropbox.com/u/101688/website/misc/howdoi.exe>`_.
 -  Special thanks to Rich Jones
-   (`@miserlou <https://github.com/miserlou>`_) for the idea
+   (`@miserlou <https://github.com/miserlou>`_) for the idea.
 
 Troubleshooting
 ---------------
