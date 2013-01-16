@@ -15,7 +15,7 @@ import re
 import lxml.html
 import os.path
 
-__version__ = "0.3"
+__version__ = "1.0"
 
 
 GOOGLE_SEARCH_URL = "https://www.google.com/search?q=site:stackoverflow.com%20{0}"

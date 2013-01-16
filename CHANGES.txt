@@ -1,9 +1,9 @@
-0.3
+1.0
 ------
 
 -	Python3 ready
 -	Removed need for pyquery, only lxml now
--  Added troubleshooting steps to the README
+-	Added troubleshooting steps to the README
 
 0.2
 ------
