@@ -12,8 +12,9 @@ import urllib.request, urllib.parse, urllib.error
 import sys
 import argparse
 import re
-import lxml.html
 import os.path
+import textwrap
+import lxml.html
 
 __version__ = "1.0"
 
@@ -30,6 +31,22 @@ def print_help():
 
 USAGE:
     howdoy.py your query""")
+
+
+def get_terminal_width():
+    stty = os.popen('stty -a', 'r').read()
+    columns = re.search("columns ([0-9]+)\;", stty)
+    return columns.group(1)
+
+
+def wrap_text(text, cols):
+    t = textwrap.TextWrapper()
+    t.width = int(cols)
+    t.break_long_words=False
+
+    wrapped_text = t.fill(text)
+    return wrapped_text
+
 
 def get_result(url):
     opener = urllib.request.build_opener()
@@ -99,7 +116,8 @@ def get_instructions(args, position):
             for t in post_text:
                 text.append(t.text_content())
 
-    return "\n".join(text)
+    columns = get_terminal_width()
+    return wrap_text("\n".join(text), columns)
 
 
 def save_query(qry):
