@@ -1,3 +1,8 @@
+1.1
+------
+
+-  Unit tests now managed through Travis CI
+
 1.0
 ------
 

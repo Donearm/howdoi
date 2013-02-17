@@ -27,12 +27,13 @@ News
 
 """ % read('README', 'CHANGES')
 
-setup(name='howdoi',
-      version=howdoi.__version__,
-      description='A code search tool',
-      long_description=long_description,
-      classifiers=[
-        "Development Status :: 4 - Beta",
+setup(
+    name='howdoi',
+    version=howdoi.__version__,
+    description='Instant coding answers via the command line',
+    long_description=long_description,
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",

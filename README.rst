@@ -1,5 +1,5 @@
-howdoi - a code search tool
-===========================
+howdoi - instant coding answers via the command line
+====================================================
 
 Are you a hack programmer? Do you find yourself constantly Googling for
 how to do basic programing tasks?
@@ -78,7 +78,7 @@ Usage
 
     howdoi [-h] [-p POS] [-a] [-g] [-l] QUERY [QUERY ...]
 
-    code search tool
+    instant coding answers via the command line
 
     positional arguments:
       QUERY              the question to answer
