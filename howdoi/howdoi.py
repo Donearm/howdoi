@@ -91,21 +91,9 @@ def get_link_at_pos(links, pos):
     return link
 
 
-def get_instructions(args, position):
+def format_text(htmlelement):
     text = []
-    links = get_google_links(args['query'])
-#    links = get_duck_links(args['query'])
-    if not links:
-        return ''
-
-    link = get_link_at_pos(links, position)
-    if args.get('link'):
-        return link
-
-    link = link + '?answertab=votes'
-    page = get_result(link)
-    html = lxml.html.document_fromstring(page)
-    first_answer = html.xpath("//td[@class='answercell']")
+    first_answer = htmlelement.xpath("//td[@class='answercell']")
     if first_answer:
         tags = first_answer[0].xpath("code") or first_answer[0].xpath("//pre")
         if tags:
@@ -119,6 +107,37 @@ def get_instructions(args, position):
                     text.append(t.text_content())
                 columns = get_terminal_width()
                 return wrap_text("\n".join(text), columns)
+    else:
+        return []
+
+
+def get_answers(args, position):
+    urls = get_google_links(args['query'])
+    if not urls:
+        return []
+
+    if args.get('max'):
+        all_answers = []
+        for l in urls:
+            if args.get('link'):
+                return l
+            else:
+                link = l + '?answertab=votes'
+                page = get_result(link)
+                html = lxml.html.document_fromstring(page)
+                all_answers.append(format_text(html))
+        return all_answers
+    else:
+        answers = []
+        link = get_link_at_pos(urls, position)
+        if args.get('link'):
+            return link
+        else:
+            link = link + '?answertab=votes'
+            page = get_result(link)
+            html = lxml.html.document_fromstring(page)
+            answers.append(format_text(html))
+            return answers
 
 
 def save_query(qry):
@@ -151,8 +170,9 @@ def howdoi(args):
             args['query'] = ' '.join(args['query']).replace('?', '')
         # save the query for later reuse
         save_query(args['query'])
-        instructions = get_instructions(args, args['pos']) or 'Sorry, couldn\'t find any help with that topic'
-        print(instructions)
+        answers = get_answers(args, args['pos']) or ['Sorry, couldn\'t find any help with that topic']
+        for a in answers:
+            print(a)
 
 
 def get_parser():
@@ -165,6 +185,8 @@ def get_parser():
     parser.add_argument('-g','--again', help='display the last query again',
                         action='store_true')
     parser.add_argument('-l','--link', help='display only the answer link',
+                        action='store_true')
+    parser.add_argument('-m','--max', help='display as many answers as possible',
                         action='store_true')
     args = vars(parser.parse_args())
     return args
