@@ -169,5 +169,5 @@ def get_parser():
     return args
 
 if __name__ == '__main__':
-    cli_args = command_line_runner()
+    cli_args = get_parser()
     howdoi(cli_args)
