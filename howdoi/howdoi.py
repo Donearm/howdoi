@@ -16,12 +16,12 @@ import os.path
 import textwrap
 import lxml.html
 
-__version__ = "1.0"
+__version__ = "1.1"
 
 
 GOOGLE_SEARCH_URL = "https://www.google.com/search?q=site:stackoverflow.com%20{0}"
 DUCK_SEARCH_URL = "http://duckduckgo.com/html?q=site%3Astackoverflow.com%20{0}"
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:18.0) Gecko/20100101 Firefox/18.0"
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0"
 CONFIG_FILE = os.path.join(os.path.expanduser('~'), '.howdoi')
 
 
