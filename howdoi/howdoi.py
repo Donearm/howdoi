@@ -48,6 +48,24 @@ def wrap_text(text, cols):
     return wrapped_text
 
 
+def save_query(qry):
+    with open(CONFIG_FILE, "w") as c:
+        try:
+            c.write(qry)
+        except OSError:
+            # something went wrong while accessing the config file
+            pass
+
+
+def read_last_query():
+    with open(CONFIG_FILE, "r") as c:
+        try:
+            first_line = c.readline()
+            return first_line
+        except OSError:
+            pass
+
+
 def get_result(url):
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-agent', USER_AGENT)]
@@ -138,24 +156,6 @@ def get_answers(args, position):
             html = lxml.html.document_fromstring(page)
             answers.append(format_text(html))
             return answers
-
-
-def save_query(qry):
-    with open(CONFIG_FILE, "w") as c:
-        try:
-            c.write(qry)
-        except OSError:
-            # something went wrong while accessing the config file
-            pass
-
-
-def read_last_query():
-    with open(CONFIG_FILE, "r") as c:
-        try:
-            first_line = c.readline()
-            return first_line
-        except OSError:
-            pass
 
 
 def howdoi(args):
