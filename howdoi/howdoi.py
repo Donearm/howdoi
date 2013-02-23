@@ -106,18 +106,19 @@ def get_instructions(args, position):
     page = get_result(link)
     html = lxml.html.document_fromstring(page)
     first_answer = html.xpath("//td[@class='answercell']")
-    tags = first_answer[0].xpath("code") or first_answer[0].xpath("//pre")
-    if tags:
-        for t in tags[0]:
-            text.append(t.text_content())
-        return "\n".join(text)
-    else:
-        post_text = first_answer[0].xpath("div[@class='post-text']/p")
-        if post_text:
-            for t in post_text:
+    if first_answer:
+        tags = first_answer[0].xpath("code") or first_answer[0].xpath("//pre")
+        if tags:
+            for t in tags[0]:
                 text.append(t.text_content())
-            columns = get_terminal_width()
-            return wrap_text("\n".join(text), columns)
+            return "\n".join(text)
+        else:
+            post_text = first_answer[0].xpath("div[@class='post-text']/p")
+            if post_text:
+                for t in post_text:
+                    text.append(t.text_content())
+                columns = get_terminal_width()
+                return wrap_text("\n".join(text), columns)
 
 
 def save_query(qry):
